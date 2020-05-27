@@ -1,0 +1,4 @@
+course/package.json
+course/global.d.ts
+course/node_modules
+course/.prettierrc

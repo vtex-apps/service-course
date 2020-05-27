@@ -1,0 +1,47 @@
+{
+  "title": "Template Course",
+  "tagline": "Like a subtitle for your course",
+  "description": "Description of your course",
+  "languages": ["en", "pt"],
+  "steps": [
+    {
+      "folder": "01-hello-world",
+      "title": { "en": "First assignment", "pt": "Primeira tarefa" },
+      "description": {
+        "en": "Description for the Hello World step (used solely for Github's progress page)",
+        "pt": "Descrição para o step de Hello World"
+      },
+      "challenge": "none"
+    },
+    {
+      "folder": "02-writing-jsonc",
+      "title": {
+        "en": "On this step, we have tests that check if some JSONC files were correctly made",
+        "pt": "Neste passo teremos testes para verificar se alguns arquivos JSONC foram corretamente criados"
+      },
+      "description": { "en": "Second description", "pt": "Segunda descrição" },
+      "challenge": "tests"
+    },
+    {
+      "folder": "03-writing-css",
+      "title": {
+        "en": "Here, we will get some CSS files and parse them, checking if the correct classes were declared",
+        "pt": "Aqui, iremos parsear arquivos CSS submetidos e verificar se as classes foram corretamente criadas"
+      },
+      "description": { "en": "Third description", "pt": "Terceira descrição" },
+      "challenge": "tests"
+    },
+    {
+      "folder": "04-wrapping-up",
+      "title": {
+        "en": "Here you can set another title for this step",
+        "pt": "Aqui você pode colocar outro título para seu step"
+      },
+      "description": {
+        "en": "Every description is required for each step",
+        "pt": "O campo descrição é obrigatório para todo step"
+      },
+      "challenge": "tests"
+    }
+  ]
+}
