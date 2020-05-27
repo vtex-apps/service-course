@@ -1,1 +1,1 @@
-Course Template Course
+Service Course

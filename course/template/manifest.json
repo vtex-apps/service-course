@@ -1,16 +1,20 @@
 {
+  "name": "backend-course",
   "vendor": "vtex",
-  "name": "change-me-course",
-  "version": "0.1.0",
-  "title": "Change me Course",
-  "description": "",
-  "defaultLocale": "en-US",
+  "version": "0.0.1",
+  "title": "Backend Course",
+  "description": "Reference app for the Backend Course",
   "builders": {
-    "store": "0.x"
+    "docs": "0.x",
+    "node": "6.x"
   },
+  "scripts": {
+    "prereleasy": "bash lint.sh"
+  },
+  "credentialType": "absolute",
+  "policies": [],
   "dependencies": {
-    "vtex.store": "2.x",
-    "vtex.rich-text": "0.x"
+    "vtex.events-example": "0.x"
   },
   "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
 }
