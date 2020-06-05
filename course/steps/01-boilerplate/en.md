@@ -9,7 +9,7 @@ Making a brief overview of the _Boilerplate_, there are two directories (`/node`
 In the `manifest.json` file, you will find the app's name, vendor, version, and other informations to pay attention to: builders, policies and dependencies. In this initial state, we have the following configurations:
 
 - builders: what builder your app will need. In this case, we have, so far, only the `docs builder` and the `node builder`, with its respectives versions;
-- policies: if the app being built needs to access some external services or get some specific data from other places, it needs to declare so, even for external API’s. At this point, we have no specific policies yet, some will be added over the course;
+- policies: if the app being built needs to access some external services or get some specific data from other places, it needs to declare so, even for external API’s. At this point, we have no specific policies yet;
 - dependencies: other VTEX IO apps your app depends on. As addressed below, for this course, we need to also link the `events-example` app, as it is listed as a dependency for this course app.
 
 ## `/node` Directory Overview
