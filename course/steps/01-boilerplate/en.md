@@ -9,20 +9,20 @@ Making a brief overview of the _Boilerplate_, there are two directories (`/node`
 In the `manifest.json` file, you will find the app's name, vendor, version, and other informations to pay attention to: builders, policies and dependencies. In this initial state, we have the following configurations:
 
 - builders: what builder your app will need. In this case, we have, so far, only the `docs builder` and the `node builder`, with its respectives versions;
-- policies: the special authorizations your app needs to have. At this point, we have no specific policies yet, some will be added over the course;
-- dependencies: other linked apps your app depends on. As addressed below, for this course, we need to also link the `events-example` app, as it is listed as a dependency for this course app.
+- policies: if the app being built needs to access some external services or get some specific data from other places, it needs to declare so, even for external API’s. At this point, we have no specific policies yet, some will be added over the course;
+- dependencies: other VTEX IO apps your app depends on. As addressed below, for this course, we need to also link the `events-example` app, as it is listed as a dependency for this course app.
 
 ## `/node` Directory Overview
 
 All directories used over the course are already in this initial project. Most of the directories are empty and will be filled throughout the course.
 
-On the `/node/clients` directory, both files are almost blank and are now just placeholders for the next steps.
+- `/node/clients`: both files are almost blank and are now just placeholders for the next steps.
 
-On the `/node/utils` directory, you will find a file containing global constants declarations (`/node/constants.ts`) and a file that will be used during the next steps as well (`/node/randomNumbers.ts`).
+- `/node/utils`: you will find a file containing global constants declarations (`/node/constants.ts`) and a file that will be used during the next steps as well (`/node/randomNumbers.ts`).
 
-The file `/node/index.ts` contains the initial declarations for the app functionality like the cache declaration and the service declarations, which will be incremented during the course. Here is also possible to export resolver functions.
+- `/node/index.ts`: contains the initial declarations for the app functionality like the cache declaration and the service declarations, which will be incremented during the course. Here is also possible to export resolver functions.
 
-At last, the file `/node/service.json` where it´s possible to declare routes that the service must respond to and other configurations like *timeout* and *memory* and will also be incremented during the course.
+- `/node/service.json`: here it´s possible to declare routes that the service must respond to and other configurations like *timeout* and *memory* and will also be incremented during the course.
 
 ## `/graphql` Directory Overview
 
