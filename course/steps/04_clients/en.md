@@ -24,9 +24,10 @@ It is important to highlight that this param contains the master data client as 
 
 In this step, we will implement the Anaylitcs client. At the beginning, it's important to emphasize that that is a function in the `utils` folder, called `randomNumber`. So, let's create a file named `analytics.ts` in the `/node/clients/` directory. This file will be our client.
 
-1. First, we will import and define our basic client, which will be a class that extends from `AppClient` that besides the constructor, has only one method, which will be `getLiveUsers` that's responsible for getting the number of product views in a well-defined structure: it's an array of objects of type `LiveUsersProduct`, which needs to be defined in a interface. This type has two fields: `slug`, the product ID - a **string** - and `liveUsers`, quantity of views - a **number**.
+1. First, we will import and define our basic client, which will be a class that extends from `AppClient` that besides the constructor, has only one method, which will be `getLiveUsers` that's responsible for getting the number of product views in a well-defined structure: it's an array of objects of type `LiveUsersProduct`, which needs to be defined in a interface. This type has two fields: `slug`, the product ID - a **string** - and `liveUsers`, quantity of views - a **number**.
 
-    Below you can check the class sketch that will be used on this implementation and it's possible to see that the constructor is already implemented. It inherits from an app called `vtex.analytics@0.x`.
+    Below you can check the class sketch that will be used on this implementation and it's possible to see that the constructor is already implemented. It inherits from an app called `vtex.analytics@0.x`.
+
     ```ts
     import { AppClient, InstanceOptions, IOContext } from '@vtex/api'
     import { getRandomNumber } from '../utils/randomNumber'
@@ -37,7 +38,7 @@ In this step, we will implement the Anaylitcs client. At the beginning, it's imp
       }
 
       public async getLiveUsers(): Promise<LiveUsersProduct[]> {
-        //this.http.get()dsfndkfldnaslkdfgnd
+        //this.http.get()
       }
     }
 
