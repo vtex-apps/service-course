@@ -30,7 +30,6 @@ In this step, we will implement the Anaylitcs client. At the beginning, it's imp
 
     ```ts
     import { AppClient, InstanceOptions, IOContext } from '@vtex/api'
-    import { getRandomNumber } from '../utils/randomNumber'
 
     export default class Analytics extends AppClient {
       constructor(context: IOContext, options?: InstanceOptions) {
@@ -81,3 +80,6 @@ In this step, we will implement the Anaylitcs client. At the beginning, it's imp
       await next()
     }
     ```
+
+    4. Now let's test it! You can send a `GET` request to the following route: 
+    `{your workspace}--appliancetheme.myvtex.com/_v/app/analytics/realTime` and it's expected that it replies with the product data and status `200`.
