@@ -1,5 +1,3 @@
 import { AppClient } from '@vtex/api'
 
-export default class Analytics extends AppClient {
-
-}
+export default class Analytics extends AppClient {}
