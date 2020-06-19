@@ -106,7 +106,8 @@ export default new Service<Clients, State, ParamsContext>({
 +      "sender": "vtex.events-example",
 +      "keys": ["send-event"]
 +    }
-  }
+  },
+  ...
 }
 ```
 

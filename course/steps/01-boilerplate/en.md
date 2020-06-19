@@ -18,11 +18,13 @@ All directories used over the course are already in this initial project. Most o
 
 - `/node/clients`: both files are almost blank and are now just placeholders for the next steps.
 
-- `/node/utils`: you will find a file containing global constants declarations (`/node/constants.ts`) and a file that will be used during the next steps as well (`/node/randomNumbers.ts`).
+- `/node/handlers`: contains a handler that will be used in the next steps.
+
+- `/node/utils`: you will find a file containing global constants declarations (`/node/constants.ts`).
 
 - `/node/index.ts`: contains the initial declarations for the app functionality like the cache declaration and the service declarations, which will be incremented during the course. Here is also possible to export resolver functions.
 
-- `/node/service.json`: here it´s possible to declare routes that the service must respond to and other configurations like *timeout* and *memory* and will also be incremented during the course.
+- `/node/service.json`: here it´s possible to declare routes that the service must respond to and other configurations like *timeout* and *memory* and will also be incremented during the course. Also contains the declaration of a route that will be used in the next steps.
 
 ## `/graphql` Directory Overview
 
