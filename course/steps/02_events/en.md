@@ -40,11 +40,20 @@ export default new Service<Clients, State, ParamsContext>({
 })
 ```
 
+Going by each configuration, we have the following:
+
+- `exponentialTimeoutCoefficient`: the exponential factor by which the `timeout` will increase in each retry.
+- `exponentialBackoffCoefficient`: the exponential factor by which the `backoff delay` will increase in each retry.
+- `initialBackoffDelay`: the time the app will wait until the next retry.
+- `retries`: the maximum times the app will retry.
+- `timeout`: the timeout until consider a failure attempt.
+- `concurrency`: the amount of simultaneous processes the event is able to perform.
+
 > By adding this code to the `Service`, we are adding to the `Client` of this `Service`, the capability to handle events. At this point, we are not yet using the `Client` itself when handling the event.
 
 3. For now, we are only going to create a log when receiving a event. To create this event handler, in the `/node/event` directory, create the `liveUsersUpdate.ts` file and insert the code below:
 
-```
+```ts
 export async function updateLiveUsers() {
   console.log('EVENT HANDLER: received event')
 }
