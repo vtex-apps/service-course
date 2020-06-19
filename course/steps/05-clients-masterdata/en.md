@@ -28,11 +28,14 @@ It is important to highlight that this param contains the master data client as 
   },
   "credentialType": "absolute",
   "policies": [
++      {
++        "name": "ADMIN_DS"
++      },
 +    {
 +      "name": "outbound-access",
 +      "attrs": {
 +        "host": "api.vtex.com",
-+        "path": "/{{account}}/dataentities/*"
++        "path": "/*"
 +      }
 +    }
   ],
@@ -108,4 +111,13 @@ export async function updateLiveUsers(ctx: EventContext<Clients>) {
 }
 ```
 
-4. Finally, run `vtex link` and
+4. Finally, run `vtex link` and wait for an event to be fired. Once it does, check your terminal for the logs in the code. Break the `vtex link` by typing `ctrl + C` and use the following _cURL_ on the terminal to check the updates on **Master Data**:
+
+```
+curl --location --request GET 'https://api.vtex.com/api/dataentities/backendproductusers/search?_fields=slug,count&_schema=v1&an=appliancetheme' \
+--header 'Content-Type: application/json'
+```
+
+The result should be like this:
+
+![image](https://user-images.githubusercontent.com/43679629/85172472-8579de00-b247-11ea-9758-f34a66df29c7.png)

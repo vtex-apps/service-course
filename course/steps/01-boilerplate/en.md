@@ -24,7 +24,28 @@ All directories used over the course are already in this initial project. Most o
 
 - `/node/index.ts`: contains the initial declarations for the app functionality like the cache declaration and the service declarations, which will be incremented during the course. Here is also possible to export resolver functions.
 
-- `/node/service.json`: here it´s possible to declare routes that the service must respond to and other configurations like *timeout* and *memory* and will also be incremented during the course. Also contains the declaration of a route that will be used in the next steps.
+- `/node/service.json`: It describes your REST API and some characteristics that will directly impact your app's infrastructure attributes.
+  Your service.json file will be found inside your app's /node folder, and will look similar to this:
+
+  ```
+  {
+  "memory": 256,
+  "timeout": 2,
+  "minReplicas": 2,
+  "maxReplicas": 4,
+  "routes": {
+    "status": {
+      "path": "/_v/status/:code",
+      "public": true
+    }
+  }
+  ```
+
+  - memory: In MegaBytes. How much memory your app will have allocated. This value will be overwritten if IO detects that your app is abusing memory usage.
+  - timeout: In seconds. VTEX.IO infra will abort the connection if the request time is longer than timeout
+  - minReplicas: When your app is running, how many minimum replicas will be available.
+  - maxReplicas: The largest amount of replicas that will be available.
+  - routes: Describes your app's REST routes, inside you will descibe the name, (ex: ssr), the path, and if its
 
 ## `/graphql` Directory Overview
 
