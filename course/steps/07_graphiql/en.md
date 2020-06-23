@@ -16,25 +16,25 @@ Exploring the IDE interface, there are three main areas: the coding area, the qu
 
 1. Open the GraphiQL route and type the code below in the coding area:
 
-```
-query ($topN: Int) {
-  productList(topN: $topN){
-    slug
-    count
-  }
-}
-```
+    ```
+    query ($topN: Int) {
+      productList(topN: $topN){
+        slug
+        count
+      }
+    }
+    ```
 
 2. The query that we just declared uses a variable (_topN_). Now we need to declare it in the _Query Variables_ area:
 
-```
-{
-  "topN": 2
-}
-```
+    ```
+    {
+      "topN": 2
+    }
+    ```
 
-> :exclamation: The _Query Variables_ area is below the coding area, to amplify it's area just drag by the title.
+    > :exclamation: The _Query Variables_ area is below the coding area, to amplify it's area just drag by the title.
 
 3. At last, just click on the _play_ button and check the outcome on the debug area. The query results should look like this:
 
-![image](https://user-images.githubusercontent.com/43679629/83763622-4c3e4d00-a64f-11ea-9615-435811d411c6.png)
+    ![image](https://user-images.githubusercontent.com/43679629/83763622-4c3e4d00-a64f-11ea-9615-435811d411c6.png)

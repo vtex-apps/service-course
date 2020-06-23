@@ -14,90 +14,93 @@ Therefore, GraphQL uses types and a query schema to specify the data retrieved a
 
 1. On the directory `/graphql/types` create the `productView.graphql` file and declare the type of the product list we want to retrieve:
 
-```
-type ProductView {
-    slug: String
-    count: Int
-}
-```
+    ```
+    type ProductView {
+        slug: String
+        count: Int
+    }
+    ```
 
 2. Still in the `/graphql` directory, define the schema in the `schema.graphql` file:
 
-```
-type Query {
-    productList(topN: Int): [ProductView]
-}
-```
+    ```
+    type Query {
+        productList(topN: Int): [ProductView]
+    }
+    ```
 
-> Keep in mind that the schema will define the structure of our query and the retrieved data.
+    > Keep in mind that the schema will define the structure of our query and the retrieved data.
 
 3. With the schema, types and the query defined, we need to create the query's resolver. The resolver is what happens when a query is executed. In our case, we want to perform a scroll on `Masterdata`, ordering by the count (as we want to get a top most viewed products) and limiting the page size (the top **n**). To define this resolver, in the `/node/resolvers` directory, create the file `products.ts` and add the following:
 
-```
-import { COURSE_ENTITY } from './../constants'
+    ```ts
+    //node/resolvers/products.ts
+    import { COURSE_ENTITY } from './../constants'
 
-export const productList = async (
-    _: any,
-    { topN }: { topN: number },
-    { clients: { masterdata } }: Context
-) =>
-    masterdata.scrollDocuments(
-    COURSE_ENTITY,
-    ['count', 'slug'],
-    {
-    page: 1,
-    pageSize: topN,
-    },
-    'v1',
-    'DESC'
-)
-```
+    export const productList = async (
+        _: any,
+        { topN }: { topN: number },
+        { clients: { masterdata } }: Context
+    ) =>
+        masterdata.scrollDocuments(
+        COURSE_ENTITY,
+        ['count', 'slug'],
+        {
+        page: 1,
+        pageSize: topN,
+        },
+        'v1',
+        'DESC'
+    )
+    ```
 
 4. At last, we need to update the `index.ts` file to set up the resolver and the query. Complete the `service` declaration as below:
 
-```diff
-+ import { productList } from './resolvers/products'
+    ```diff
+    //node/index.ts
+    + import { productList } from './resolvers/products'
 
-...
+    ...
 
 
-export default new Service<Clients, State, ParamsContext>({
-    clients: {
-        implementation: Clients,
-        options: {
-        events: {
-            exponentialTimeoutCoefficient: 2,
-            exponentialBackoffCoefficient: 2,
-            initialBackoffDelay: 50,
-            retries: 1,
-            timeout: TREE_SECONDS_MS,
-            concurrency: CONCURRENCY,
+    export default new Service<Clients, State, ParamsContext>({
+        clients: {
+            implementation: Clients,
+            options: {
+            events: {
+                exponentialTimeoutCoefficient: 2,
+                exponentialBackoffCoefficient: 2,
+                initialBackoffDelay: 50,
+                retries: 1,
+                timeout: TREE_SECONDS_MS,
+                concurrency: CONCURRENCY,
+                },
             },
         },
+        events: {
+            liveUsersUpdate: updateLiveUsers,
+        },
+    +        graphql: {
+    +            resolvers: {
+    +                Query: {
+    +                    productList,
+    +                },
+    +        },
+    +    },
+    })
+    ```
+
+    And, also, remember to add the `graphql` builder on the `manifest.json`:
+
+    ```diff
+    //manifest.json
+    "builders": {
+    +        "graphql": "1.x",
+        "docs": "0.x",
+        "node": "6.x"
     },
-    events: {
-        liveUsersUpdate: updateLiveUsers,
-    },
-+        graphql: {
-+            resolvers: {
-+                Query: {
-+                    productList,
-+                },
-+        },
-+    },
-})
-```
+    ```
 
-And, also, remember to add the `graphql` builder on the `Manifest.json`:
+    Finally, link the app and you should get a GraphQL route. The result should be like this:
 
-```diff
-"builders": {
-+        "graphql": "1.x",
-    "docs": "0.x",
-    "node": "6.x"
-},
-```
-
-Finally, link the app and you should get a GraphQL route. The result should be like this:
-
-![image](https://user-images.githubusercontent.com/43679629/82947940-3c4faa80-9f77-11ea-8bfa-138d11cdec1f.png)
+    ![image](https://user-images.githubusercontent.com/43679629/82947940-3c4faa80-9f77-11ea-8bfa-138d11cdec1f.png)

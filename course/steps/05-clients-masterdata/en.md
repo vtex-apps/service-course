@@ -20,104 +20,109 @@ It is important to highlight that this param contains the master data client as 
 
 ## Activity
 
-1. First, we need to setup the policies in our app, to authorize it to use **Master Data**. In the `Manifest.json` file, add the following:
+1. First, we need to setup the policies in our app, to authorize it to use **Master Data**. In the `manifest.json` file, add the following:
 
-```diff
-{
-  ...
-  },
-  "credentialType": "absolute",
-  "policies": [
-+      {
-+        "name": "ADMIN_DS"
-+      },
-+    {
-+      "name": "outbound-access",
-+      "attrs": {
-+        "host": "api.vtex.com",
-+        "path": "/*"
-+      }
-+    }
-  ],
-  "dependencies": {
-  ...
-}
-```
+    ```diff
+    //manifest.json
+    {
+      ...
+      },
+      "credentialType": "absolute",
+      "policies": [
+    +      {
+    +        "name": "ADMIN_DS"
+    +      },
+    +    {
+    +      "name": "outbound-access",
+    +      "attrs": {
+    +        "host": "api.vtex.com",
+    +        "path": "/*"
+    +      }
+    +    }
+      ],
+      "dependencies": {
+      ...
+    }
+    ```
 
-> By doing this, we are guaranteeing that this app has the authorization to access **Master Data**.
+    > By doing this, we are guaranteeing that this app has the authorization to access **Master Data**.
 
-2. Now, to save this data in the **Master Data**, we need to, first, check for each product, if it is already saved. To do so, in the `/Events/updateLiveUsers.ts` file, add the following:
 
-```diff
-...
-+ import { COURSE_ENTITY } from '../utils/constants'
+2. Now, to save this data in the **Master Data**, we need to, first, check for each product, if it is already saved. To do so, we will use a method of the Master Data client called `searchDocuments`. In the `node/event/updateLiveUsers.ts` file, add the following:
 
-export async function updateLiveUsers(ctx: EventContext<Clients>) {
-  const liveUsersProducts = await ctx.clients.analytics.getLiveUsers()
-  console.log('LIVE USERS ', liveUsersProducts)
-+  await Promise.all(
-+    liveUsersProducts.map(async ({ slug, liveUsers }) => {
-+      try {
-+        const [savedProduct] = await ctx.clients.masterdata.searchDocuments<{
-+          id: string
-+          count: number
-+          slug: string
-+        }>({
-+          dataEntity: COURSE_ENTITY,
-+          fields: ['count', 'id', 'slug'],
-+          pagination: {
-+            page: 1,
-+            pageSize: 1,
-+          },
-+          schema: 'v1',
-+          where: `slug=${slug}`,
-+        })
-+
-+        console.log('SAVED PRODUCT', savedProduct)
-+
-+      } catch {
-+        console.log(`failed to update product ${slug}`)
-+      }
-+    })
-+  )
-  return true
-}
-```
+    ```diff
+    //node/event/updateLiveUsers.ts
+    ...
+    + import { COURSE_ENTITY } from '../utils/constants'
 
-> Note that we are using the `COURSE_ENTITY`, from the global constants, to access your data.
+    export async function updateLiveUsers(ctx: EventContext<Clients>) {
+      const liveUsersProducts = await ctx.clients.analytics.getLiveUsers()
+      console.log('LIVE USERS ', liveUsersProducts)
+    +  await Promise.all(
+    +    liveUsersProducts.map(async ({ slug, liveUsers }) => {
+    +      try {
+    +        const [savedProduct] = await ctx.clients.masterdata.searchDocuments<{
+    +          id: string
+    +          count: number
+    +          slug: string
+    +        }>({
+    +          dataEntity: COURSE_ENTITY,
+    +          fields: ['count', 'id', 'slug'],
+    +          pagination: {
+    +            page: 1,
+    +            pageSize: 1,
+    +          },
+    +          schema: 'v1',
+    +          where: `slug=${slug}`,
+    +        })
+    +
+    +        console.log('SAVED PRODUCT', savedProduct)
+    +
+    +      } catch {
+    +        console.log(`failed to update product ${slug}`)
+    +      }
+    +    })
+    +  )
+      return true
+    }
+    ```
 
-3. If our product is already saved, we need to update it by incrementing its count. **Master Data** has a method that allows us to update an existing document or create a new document, if the document does not exist. To implement this, in the same file, add this code:
+    > Note that we are using the `COURSE_ENTITY`, from the global constants, to access your data.
 
-```diff
-export async function updateLiveUsers(ctx: EventContext<Clients>) {
-...
-        console.log('SAVED PRODUCT', savedProduct)
+3. If our product is already saved, we need to update it by incrementing its count. **Master Data** has a method that allows us to update an existing document or create a new document, if the document does not exist - `createOrUpdateEntireDocument`. To use this method and implement the incrementation on the Master Data entity, in the same file that was changed before, right after the log line of *saved product*, add this code:
 
-+        await ctx.clients.masterdata.createOrUpdateEntireDocument({
-+          dataEntity: COURSE_ENTITY,
-+          fields: {
-+            count: liveUsers,
-+            slug,
-+          },
-+          id: savedProduct?.id,
-+        })
-
-      } catch {
-        console.log(`failed to update product ${slug}`)
-      }
-    })
-  )
-  return true
-}
-```
+    ```diff
+    //node/event/updateLiveUsers.ts
+    export async function updateLiveUsers(ctx: EventContext<Clients>) {
+      await Promise.all(
+        liveUsersProducts.map(async ({ slug, liveUsers }) => {
+          try {
+            ...
+            console.log('SAVED PRODUCT', savedProduct)
+    +       await ctx.clients.masterdata.createOrUpdateEntireDocument({
+    +          dataEntity: COURSE_ENTITY,
+    +          fields: {
+    +            count: liveUsers,
+    +            slug,
+    +          },
+    +          id: savedProduct?.id,
+    +        })
+          } catch {
+            console.log(`failed to update product ${slug}`)
+          }
+        })
+      )
+      return true
+    }
+    ```
 
 4. Finally, run `vtex link` and wait for an event to be fired. Once it does, check your terminal for the logs in the code. Break the `vtex link` by typing `ctrl + C` and use the following _cURL_ on the terminal to check the updates on **Master Data**:
 
-```
-curl --location --request GET 'https://api.vtex.com/api/dataentities/backendproductusers/search?_fields=slug,count&_schema=v1&an=appliancetheme' \
---header 'Content-Type: application/json'
-```
+    ```
+    curl --location --request GET 'https://api.vtex.com/api/dataentities/backendproductusers/search?_fields=slug,count&_schema=v1&an=appliancetheme' \
+    --header 'Content-Type: application/json'
+    ```
 
-The result should be like this:
+    The result should be like this:
 
-![image](https://user-images.githubusercontent.com/43679629/85172472-8579de00-b247-11ea-9758-f34a66df29c7.png)
+    ![image](https://user-images.githubusercontent.com/43679629/85172472-8579de00-b247-11ea-9758-f34a66df29c7.png)

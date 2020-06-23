@@ -10,32 +10,34 @@ In VTEX IO, events are often used as triggers to other actions, such as sending 
 
 ## Activity
 
-1. As the _Analytics client_ is implemented, we just need to use it in the event handler. First, in the `./events/liveUsersUpdate.ts` file, import the client we implemented in the previous step by adding the following:
+1. As the _Analytics client_ is implemented, we just need to use it in the event handler. First, in the `node/event/liveUsersUpdate.ts` file, import the client we implemented in the previous step by adding the following:
 
-```ts
-import { Clients } from './../clients/index'
-```
+    ```ts
+    import { Clients } from '../clients/index'
+    ```
 
 2. Now, we need to use the `EventContext` that we already configured before. Import it by adding the following code and update the method:
 
-```diff
-import { Clients } from './../clients/index'
-+import { EventContext } from '@vtex/api'
+    ```diff
+    //node/event/liveUsersUpdate.ts
+    import { Clients } from './../clients/index'
+    +import { EventContext } from '@vtex/api'
 
-+export async function updateLiveUsers(ctx: EventContext<Clients>) {
-...
-}
-```
+    +export async function updateLiveUsers(ctx: EventContext<Clients>) {
+    ...
+    }
+    ```
 
 3. Now, to use the _Analytics client_, add this code:
 
-```diff
-export async function updateLiveUsers(ctx: EventContext<Clients>) {
-+  const liveUsersProducts = await ctx.clients.analytics.getLiveUsers()
-+  console.log('LIVE USERS: ', liveUsersProduct)
-+  return true
-}
-```
+    ```diff
+    //node/event/liveUsersUpdate.ts
+    export async function updateLiveUsers(ctx: EventContext<Clients>) {
+    +  const liveUsersProducts = await ctx.clients.analytics.getLiveUsers()
+    +  console.log('LIVE USERS: ', liveUsersProduct)
+    +  return true
+    }
+    ```
 
 3. Finally, run `vtex link` and for every event fired, you should see the live users retrieved from the _Analytics_.
    The result should be like this:
