@@ -79,24 +79,18 @@ In this step, we will implement the Anaylitcs client. So,
 
    Inside the node directory, there is a folder called `handlers`. There is already a file named `analytics.ts`, in which its necessary to do two things for your test to work: get the analytics client from `ctx` and replace the content of `ctx.body` with the method mentioned before, as you can see in the code block below:
 
-   ```diff
-   export async function analytics(ctx: Context, next: () => Promise<any>) {
-     if (ctx.method.toUpperCase() === 'GET') {
-   +    const {
-   +      clients: {
-   +        analytics
-   +      }
-   +    } = ctx
-
-       ctx.status = 200
-   -   ctx.body = 'OK'
-   +   ctx.body = await analytics.getLiveUsers()
-
-       ctx.set('cache-control', 'no-cache')
-     }
-     await next()
-   }
-   ```
+  ```diff
+    export async function analytics(ctx: Context, next: () => Promise<any>) {
+  +    const {
+  +      clients: { analytics },
+  +    } = ctx
+  +    ctx.status = 200
+  -    ctx.body = 'OK'
+  +    ctx.body = await analytics.getLiveUsers()
+  +    ctx.set('cache-control', 'no-cache')
+      await next()
+    }
+  ```
 
 6. Now let's test it! It's possible to use Postman to send a `GET` request to the following route:
 

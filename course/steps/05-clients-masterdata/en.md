@@ -49,7 +49,7 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
 
    > By doing this, we are guaranteeing that this app has the authorization to access **Master Data**.
 
-2) Now, to save this data in the **Master Data**, we need to, first, check for each _productSlug_, if it is already saved. To do so, we will use a method of the Master Data client called `searchDocuments`. To use it, in the `node/event/updateLiveUsers.ts` file, do something like this:
+2. Now, to save this data in the **Master Data**, we need to, first, check for each _productSlug_, if it is already saved. To do so, we will use a method of the Master Data client called `searchDocuments`. To use it, in the `node/event/updateLiveUsers.ts` file, do something like this:
 
    ```diff
    //node/event/updateLiveUsers.ts
@@ -61,27 +61,21 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
      console.log('LIVE USERS ', liveUsersProducts)
    +  await Promise.all(
    +    liveUsersProducts.map(async ({ slug, liveUsers }) => {
-   +      try {
-   +        const [savedProduct] = await ctx.clients.masterdata.searchDocuments<{
-   +          id: string
-   +          count: number
-   +          slug: string
-   +        }>({
-   +          dataEntity: COURSE_ENTITY,
-   +          fields: ['count', 'id', 'slug'],
-   +          pagination: {
-   +            page: 1,
-   +            pageSize: 1,
-   +          },
-   +          schema: 'v1',
-   +          where: `slug=${slug}`,
-   +        })
-   +
-   +        console.log('SAVED PRODUCT', savedProduct)
-   +
-   +      } catch {
-   +        console.log(`failed to update product ${slug}`)
-   +      }
+   +       const [savedProduct] = await ctx.clients.masterdata.searchDocuments<{
+   +         id: string
+   +         count: number
+   +         slug: string
+   +       }>({
+   +         dataEntity: COURSE_ENTITY,
+   +         fields: ['count', 'id', 'slug'],
+   +         pagination: {
+   +           page: 1,
+   +           pageSize: 1,
+   +         },
+   +         schema: 'v1',
+   +         where: `slug=${slug}`,
+   +       })
+   +    console.log('SAVED PRODUCT', savedProduct)
    +    })
    +  )
      return true
@@ -90,7 +84,28 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
 
    > Note that we are using the `COURSE_ENTITY`, from the global constants, to access your data.
 
-3) If our product is already saved, we need to update it by incrementing its count. **Master Data** has a method that allows us to update an existing document or create a new document, if the document does not exist - `createOrUpdateEntireDocument`. To use this method and implement the incrementation on the Master Data entity, in the same file that was changed before, right after the log line of _saved product_, add this code:
+3. Now, to make sure we are handling erros, implement a `try-catch` structure. To do so, do something like this:
+
+  ```diff
+  export async function updateLiveUsers(ctx: EventContext<Clients>) {
+    const liveUsersProducts = await ctx.clients.analytics.getLiveUsers()
+    console.log('MOCKED LIVE USERS ', liveUsersProducts)
+    await Promise.all(
+      liveUsersProducts.map(async ({ slug, liveUsers }) => {
+  +      try {
+          ...
+  +      } catch (e) {
+  +        console.log(`failed to update product ${slug}`)
+  +        console.log(e)
+  +      }
+      })
+    )
+    return true
+  }
+  ```
+
+
+4. If our product is already saved, we need to update it by incrementing its count. **Master Data** has a method that allows us to update an existing document or create a new document, if the document does not exist - `createOrUpdateEntireDocument`. To use this method and implement the incrementation on the Master Data entity, in the same file that was changed before, right after the log line of _saved product_, add this code:
 
    ```diff
    //node/event/updateLiveUsers.ts
@@ -110,6 +125,7 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
    +        })
          } catch {
            console.log(`failed to update product ${slug}`)
+           console.log(e)
          }
        })
      )
@@ -119,7 +135,7 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
 
    > Note: if an error is thrown inside an event handler, VTEX IO will retry sending this event.
 
-4) Finally, run `vtex link` and wait for an event to be fired. Once it does, check your terminal for the logs in the code. Break the `vtex link` by typing `ctrl + C` and use the following _cURL_ on the terminal to check the updates on **Master Data**:
+4. Finally, run `vtex link` and wait for an event to be fired. Once it does, check your terminal for the logs in the code. Break the `vtex link` by typing `ctrl + C` and use the following _cURL_ on the terminal to check the updates on **Master Data**:
 
    ```
    curl --location --request GET 'https://api.vtex.com/api/dataentities/backendproductusers/search?_fields=slug,count&_schema=v1&an=appliancetheme' \
