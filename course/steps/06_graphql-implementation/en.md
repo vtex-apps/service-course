@@ -8,85 +8,66 @@ Now that we have updated the products count, we need to retrieve the _top n_ mos
 
 To get these product page views, we will use [GraphQL](https://graphql.org/), the technology used by VTEX IO for data fetching, to implement a query to Masterdata. GraphQL allows us to implement queries in a simple and easy way, specifying the data you want to retrieve. This makes your API reliable, since GraphQL controlls the data fetched instead of the server itself.
 
+**It's also the only possible way to create an interface between services and front end applications.**
+
 Therefore, GraphQL uses types and a query schema to specify the data retrieved and resolvers to get the exact data needed.
 
 ## Activity
 
 1. On the directory `/graphql/types` create the `productView.graphql` file and declare the type of the product list we want to retrieve:
 
-    ```
-    type ProductView {
-        slug: String
-        count: Int
-    }
-    ```
+   ```
+   type ProductView {
+       slug: String
+       count: Int
+   }
+   ```
 
 2. Still in the `/graphql` directory, define the schema in the `schema.graphql` file:
 
-    ```
-    type Query {
-        productList(topN: Int): [ProductView]
-    }
-    ```
+   ```
+   type Query {
+       productList(topN: Int): [ProductView]
+   }
+   ```
 
-    > Keep in mind that the schema will define the structure of our query and the retrieved data.
+   > Keep in mind that the schema will define the structure of our query and the retrieved data.
 
-3. With the schema, types and the query defined, we need to create the query's resolver. The resolver is what happens when a query is executed. In our case, we want to perform a scroll on `Masterdata`, ordering by the count (as we want to get a top most viewed products) and limiting the page size (the top **n**). To define this resolver, in the `/node/resolvers` directory, create the file `products.ts` and add the following:
+3. With the schema, types and the query defined, we need to create the query's resolver. The resolver is what happens when a query is executed. In our case, we want to perform a scroll on `Masterdata`, ordering by the count (as we want to get a top most viewed products) and limiting the page size (the top **n**). To define this resolver, in the `/node/resolvers` directory, create the file `products.ts` and do the following:
 
-    ```ts
-    //node/resolvers/products.ts
-    import { COURSE_ENTITY } from './../constants'
+   ```ts
+   //node/resolvers/products.ts
+  import { COURSE_ENTITY } from '../utils/constants'
 
-    export const productList = async (
-        _: any,
-        { topN }: { topN: number },
-        { clients: { masterdata } }: Context
-    ) =>
-        masterdata.scrollDocuments(
-        COURSE_ENTITY,
-        ['count', 'slug'],
-        {
-        page: 1,
-        pageSize: topN,
-        },
-        'v1',
-        'DESC'
-    )
-    ```
+  export const productList = async (
+    _: any,
+    { topN }: { topN: number },
+    { clients: { masterdata } }: Context
+  ) =>
+    masterdata.scrollDocuments(
+      {
+        dataEntity: COURSE_ENTITY,
+        fields: ['count', 'slug'],
+        schema: 'v1',
+        size: topN,
+        sort: `count DESC`
+      }
+    ).then((({data}) => data))
+   ```
+
+   > Note: you can check the Master Data scroll documentation in this [link](https://help.vtex.com/tutorial/querying-the-master-data-via-scroll-path--tutorials_4631)
 
 4. At last, we need to update the `index.ts` file to set up the resolver and the query. Complete the `service` declaration as below:
 
-    ```diff
-    //node/index.ts
-    + import { productList } from './resolvers/products'
-
-    ...
-
-
-    export default new Service<Clients, State, ParamsContext>({
-        clients: {
-            implementation: Clients,
-            options: {
-            events: {
-                exponentialTimeoutCoefficient: 2,
-                exponentialBackoffCoefficient: 2,
-                initialBackoffDelay: 50,
-                retries: 1,
-                timeout: TREE_SECONDS_MS,
-                concurrency: CONCURRENCY,
-                },
+   ```td
+        },
+            graphql: {
+                resolvers: {
+                    Query: {
+                        productList,
+                    },
             },
         },
-        events: {
-            liveUsersUpdate: updateLiveUsers,
-        },
-    +        graphql: {
-    +            resolvers: {
-    +                Query: {
-    +                    productList,
-    +                },
-    +        },
-    +    },
     })
     ```
 
