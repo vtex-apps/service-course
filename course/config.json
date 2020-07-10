@@ -1,5 +1,5 @@
 {
-  "title": "Service Course",
+  "title": "VTEX IO Service Course",
   "tagline": "Building backend applications with VTEX IO",
   "description": "In this course, learn about the main possibilities of backend applications in VTEX IO. Export routes, handle events and connect with external and internal apps, to make your VTEX IO app even better and take the best out of VTEX infrastructure.",
   "languages": ["en"],
