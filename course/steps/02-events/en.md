@@ -20,6 +20,10 @@ On VTEX IO apps, events can be fired and used to trigger actions. For example, a
 
    ```diff
    //node/index/ts
+
+   + const TREE_SECONDS_MS = 3 * 1000
+   + const CONCURRENCY = 10
+
    export default new Service<Clients, State, ParamsContext>({
      clients: {
        implementation: Clients,
