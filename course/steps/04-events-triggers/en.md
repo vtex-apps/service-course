@@ -36,7 +36,7 @@ In VTEX IO, events are often used as triggers to other actions, such as sending 
    //node/event/liveUsersUpdate.ts
    export async function updateLiveUsers(ctx: EventContext<Clients>) {
    +  const liveUsersProducts = await ctx.clients.analytics.getLiveUsers()
-   +  console.log('LIVE USERS: ', liveUsersProduct)
+   +  console.log('LIVE USERS: ', liveUsersProducts)
    +  return true
    }
    ```
