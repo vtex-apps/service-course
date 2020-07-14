@@ -54,7 +54,7 @@ Therefore, GraphQL uses types and a query schema to specify the data retrieved a
             size: topN,
             sort: `count DESC`
           }
-        ).then((({data}) => daxta))
+        ).then((({data}) => data))
     ```
 
    > Note: you can check the Master Data scroll documentation in this [link](https://help.vtex.com/tutorial/querying-the-master-data-via-scroll-path--tutorials_4631)
