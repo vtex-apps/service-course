@@ -33,35 +33,35 @@ Therefore, GraphQL uses types and a query schema to specify the data retrieved a
 
    > Keep in mind that the schema will define the structure of our query and the retrieved data.
   
-  Also, in this declaration you can include directives. In some cases, it is required, for example, if you need to get the user token or use cookies (e.g.: `OrderForm`). To read more about it, check out [this link](https://github.com/vtex-apps/graphql-example).
+    Also, in this declaration you can include directives. In some cases, it is required, for example, if you need to get the user token or use cookies (e.g.: `OrderForm`). To read more about it, check out [this link](https://github.com/vtex-apps/graphql-example).
 
 3. With the schema, types and the query defined, we need to create the query's resolver. The resolver is what happens when a query is executed. In our case, we want to perform a scroll on `Masterdata`, ordering by the count (as we want to get a top most viewed products) and limiting the page size (the top **n**). To define this resolver, in the `/node/resolvers` directory, create the file `products.ts` and do the following:
 
-   ```ts
-   //node/resolvers/products.ts
-  import { COURSE_ENTITY } from '../utils/constants'
+    ```ts
+      //node/resolvers/products.ts
+      import { COURSE_ENTITY } from '../utils/constants'
 
-  export const productList = async (
-    _: any,
-    { topN }: { topN: number },
-    { clients: { masterdata } }: Context
-  ) =>
-    masterdata.scrollDocuments(
-      {
-        dataEntity: COURSE_ENTITY,
-        fields: ['count', 'slug'],
-        schema: 'v1',
-        size: topN,
-        sort: `count DESC`
-      }
-    ).then((({data}) => data))
-   ```
+      export const productList = async (
+        _: any,
+        { topN }: { topN: number },
+        { clients: { masterdata } }: Context
+      ) =>
+        masterdata.scrollDocuments(
+          {
+            dataEntity: COURSE_ENTITY,
+            fields: ['count', 'slug'],
+            schema: 'v1',
+            size: topN,
+            sort: `count DESC`
+          }
+        ).then((({data}) => data))
+    ```
 
    > Note: you can check the Master Data scroll documentation in this [link](https://help.vtex.com/tutorial/querying-the-master-data-via-scroll-path--tutorials_4631)
 
 4. At last, we need to update the `index.ts` file to set up the resolver and the query. Complete the `service` declaration as below:
 
-   ```td
+    ```ts
         },
             graphql: {
                 resolvers: {
