@@ -1,0 +1,2 @@
+# Add this here because the vtex link step runs yarn and adds 5000+ files
+node_modules/

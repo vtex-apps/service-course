@@ -21,7 +21,7 @@ On VTEX IO apps, events can be fired and used to trigger actions. For example, a
    ```diff
    //node/index/ts
 
-   + const TREE_SECONDS_MS = 3 * 1000
+   + const THREE_SECONDS_MS = 3 * 1000
    + const CONCURRENCY = 10
 
    export default new Service<Clients, State, ParamsContext>({
@@ -37,7 +37,7 @@ On VTEX IO apps, events can be fired and used to trigger actions. For example, a
    +        exponentialBackoffCoefficient: 2,
    +        initialBackoffDelay: 50,
    +        retries: 1,
-   +        timeout: TREE_SECONDS_MS,
+   +        timeout: THREE_SECONDS_MS,
    +        concurrency: CONCURRENCY,
    +      },
    +    },
