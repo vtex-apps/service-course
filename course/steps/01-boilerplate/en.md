@@ -22,9 +22,9 @@ All directories used over the course are already in this initial project. Most o
 
 - `/node/utils`: you will find a file containing global constants declarations (`/node/constants.ts`).
 
-- `/node/index.ts`: contains the initial declarations for the app functionality like the cache declaration and the service declarations, which will be incremented during the course. Here is also possible to export resolver functions implementations.
+- `/node/index.ts`: contains the initial declarations for the app functionality like the cache declaration and the service declarations, which will be incremented during the course. Here it is also possible to export resolver functions implementations (for GraphQL).
 
-- `/node/service.json`: It describes your REST API and some characteristics that will directly impact your app's infrastructure attributes.
+- `/node/service.json`: describes your REST API and some characteristics that will directly impact your app's infrastructure attributes.
   Your service.json file will be found inside your app's `/node` folder, and will look similar to this:
 
   ```
@@ -47,7 +47,7 @@ All directories used over the course are already in this initial project. Most o
   | timeout     | Seconds    | VTEX.IO infra will abort the connection if the request time is longer than timeout                                               |
   | minReplicas | Integer    | When your app is running, how many minimum replicas will be available                                                            |
   | maxReplicas | Integer    | The largest amount of replicas that will be available                                                                            |
-  | routes      | -          | Describes your app's REST routes, inside you will descibe the name, (ex: ssr), the path, and if its public or private            |
+  | routes      | -          | Describes your app's REST routes, inside you will descibe the name, (ex: ssr), the path, and if it's public or private            |
 
 ## `/graphql` Directory Overview
 

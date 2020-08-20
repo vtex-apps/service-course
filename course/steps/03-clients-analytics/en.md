@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In this step, some clients concepts are going to be briefly explained and it's presented which are the clients that are necessary for this course: **analytics client** and **master data client**. The first one will be implemented on this step and you'll also learn how to use a client that has been already implemented in our API.
+In this step, we briefly explain some clients concepts and present the clients that will be necessary for this course: **analytics client** and **master data client**. The first one will be implemented on this step, and you'll also learn how to use a client that has been already implemented in our API.
 
 ## About the clients
 
@@ -18,23 +18,24 @@ In this course, it will be necessary to create a client that will be used to get
 
 ## Activity
 
-In this step, we will implement the Anaylitcs client. So,
+In this step, we will implement the Analytics client. So,
 
 1. First, in the `/node/clients/` directory, you will find a file called `analytics.ts`, which already has a sketch, just like the code block below. This is where you'll implement your client.
 
    ```ts
+   //node/clients/analytics.ts
    import { AppClient } from '@vtex/api'
 
    export default class Analytics extends AppClient {}
    ```
 
-   > You can noticed in this code block that Analytics is a client that extends from `AppClient` because this offers pre-configurations that assure that your client has a secure communication with other parts of your app.
+  > You can see in this code block that `Analytics` is a client that extends from `AppClient` because this class offers pre-configurations that assure that your client has secure communication with other parts of your app.
 
 2. The client needs to have a constructor and just a single method, called `getLiveUsers`. This method returns a promise of an array that its elements are of the type `LiveUsersProduct`. Using the code below, add the necessary code lines to the client:
 
    ```diff
    //node/clients/analytics.ts
-   import { AppClient, InstanceOptions, IOContext } from '@vtex/api'
+   +import { AppClient, InstanceOptions, IOContext } from '@vtex/api'
 
    export default class Analytics extends AppClient {
    +  constructor(context: IOContext, options?: InstanceOptions) {
@@ -60,7 +61,9 @@ In this step, we will implement the Anaylitcs client. So,
 
    > The method that you've just created will get the necessary data for this application: an array of objects that have two fields: `slug`, a string that represents the product ID and `liveUsers`, a number that is the quantity of users visualizing this product - which are the fields in the interface.
 
-4. With your analytics client already implemented, it's necessary to declare it as one of the clients in the `Clients` class, so it will be accessible using the `Context` that we've talked about at the beginning of this step.
+4. The `_v/live-products` API endpoint we call above needs the app `mocked-analytics` to run, or your `getLiveUsers` method will not see anything there. **In case of not running this application on `appliancetheme` account**, you will have to install the `mocked-analytics` app on your workspace. To do that, you can run `vtex install vtex.mocked-analytics`.
+
+5. With your analytics client already implemented, it's necessary to declare it as one of the clients in the `Clients` class, so it will be accessible using the `Context` that we've talked about at the beginning of this step.
 
    So, in the `node/clients/` directory, go to the file called `index.ts` and add a get method to the class that refers to the analytics client. It's also necessary to import the client that you created.
 
@@ -75,9 +78,9 @@ In this step, we will implement the Anaylitcs client. So,
    }
    ```
 
-5. So as to see it working, it's possible to use `getLiveUsers` method inside the handler for the analytics client. Using a route that it's already defined in the project, it is possible to send a request to it and the handler responsible for this route will call the method that we created.
+6. So as to see it working, it's possible to use `getLiveUsers` method inside the handler for the analytics client. Using a route that it's already defined in the project, it is possible to send a request to it and the handler responsible for this route will call the method that we created.
 
-   Inside the node directory, there is a folder called `handlers`. There is already a file named `analytics.ts`, in which its necessary to do two things for your test to work: get the analytics client from `ctx` and replace the content of `ctx.body` with the method mentioned before, as you can see in the code block below:
+   Inside the node directory, there is a folder called `handlers`. There is already a file named `analytics.ts`, in which it's necessary to do two things for your test to work: get the analytics client from `ctx` and replace the content of `ctx.body` with the method mentioned before, as you can see in the code block below:
 
   ```diff
     export async function analytics(ctx: Context, next: () => Promise<any>) {
@@ -92,10 +95,12 @@ In this step, we will implement the Anaylitcs client. So,
     }
   ```
 
-6. Now let's test it! It's possible to use Postman to send a `GET` request to the following route:
+7. Now let's test it! It's possible to use Postman to send a `GET` request to the following route:
 
-   `{your workspace}--appliancetheme.myvtex.com/_v/app/analytics/realTime`
+   `{your workspace}--{your account}.myvtex.com/_v/app/analytics/realTime`
 
    and it's expected that it replies with the data and status `200`.
+
+  > **Attention**! Generally, the account where you're running the app is `appliancetheme`.
 
 ![image](https://user-images.githubusercontent.com/19495917/84827089-53c00780-affa-11ea-857f-fdcba0fef7c2.png)
