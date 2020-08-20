@@ -29,7 +29,7 @@ In this step, we will implement the Analytics client. So,
    export default class Analytics extends AppClient {}
    ```
 
-  > You can see in this code block that `Analytics` is a client that extends from `AppClient` because this class offers pre-configurations that assure that your client has secure communication with other parts of your app.
+    > You can see in this code block that `Analytics` is a client that extends from `AppClient` because this class offers pre-configurations that assure that your client has secure communication with other parts of your app.
 
 2. The client needs to have a constructor and just a single method, called `getLiveUsers`. This method returns a promise of an array that its elements are of the type `LiveUsersProduct`. Using the code below, add the necessary code lines to the client:
 
@@ -59,7 +59,7 @@ In this step, we will implement the Analytics client. So,
    return this.http.get('_v/live-products')
    ```
 
-   > The method that you've just created will get the necessary data for this application: an array of objects that have two fields: `slug`, a string that represents the product ID and `liveUsers`, a number that is the quantity of users visualizing this product - which are the fields in the interface.
+    > The method that you've just created will get the necessary data for this application: an array of objects that have two fields: `slug`, a string that represents the product ID and `liveUsers`, a number that is the quantity of users visualizing this product - which are the fields in the interface.
 
 4. The `_v/live-products` API endpoint we call above needs the app `mocked-analytics` to run, or your `getLiveUsers` method will not see anything there. **In case of not running this application on `appliancetheme` account**, you will have to install the `mocked-analytics` app on your workspace. To do that, you can run `vtex install vtex.mocked-analytics`.
 
