@@ -1,4 +1,4 @@
-# Using events as triggers
+# Events: Using Events as Triggers
 
 ## Introduction
 
