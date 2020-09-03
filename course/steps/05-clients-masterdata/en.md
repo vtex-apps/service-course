@@ -84,7 +84,7 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
 
    > Note that we are using the `COURSE_ENTITY`, from the global constants, to access your data.
 
-3. Now, to make sure we are handling erros, implement a `try-catch` structure. To do so, do something like this:
+3. Now, to make sure we are handling errors, implement a `try-catch` structure. To do so, do something like this:
 
   ```diff
   export async function updateLiveUsers(ctx: EventContext<Clients>) {
@@ -121,7 +121,8 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
    +            count: liveUsers,
    +            slug,
    +          },
-   +          id: savedProduct?.id,
+   +          id: savedProduct?.id,,
+   +          schema: 'v1'
    +        })
          } catch {
            console.log(`failed to update product ${slug}`)
@@ -138,7 +139,7 @@ In this step, it will be used to fetch data regarding the top-N most viewed prod
 4. Finally, run `vtex link` and wait for an event to be fired. Once it does, check your terminal for the logs in the code. Break the `vtex link` by typing `ctrl + C` and use the following _cURL_ on the terminal to check the updates on **Master Data**:
 
    ```
-   curl --location --request GET 'https://api.vtex.com/api/dataentities/backendproductusers/search?_fields=slug,count&_schema=v1&an=appliancetheme' \
+   curl --location --request GET 'https://api.vtex.com/api/dataentities/course_backend_product_list/search?_fields=slug,count&_schema=v1&an=appliancetheme' \
    --header 'Content-Type: application/json'
    ```
 
