@@ -1,7 +1,7 @@
 {
   "name": "service-course",
   "vendor": "vtex",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "title": "Service Course",
   "description": "Course aproaching VTEX Backend Services",
   "dependencies": {},
